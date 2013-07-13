@@ -82,8 +82,9 @@ int main( int argc, char *argv[] ) {
 	timeout( 0 );
 	looping = 1;
 	while( looping ) {
-		bzero( line, 1000 );
-		fgets( line, 1000, in );
+		memset( line, 0, sizeof line );
+		if( fgets( line, sizeof line, in ) == NULL )
+			break;
 
 		/* get file pos */
 		new_pos = curr_pos = ftell( in );
@@ -284,7 +285,8 @@ int main( int argc, char *argv[] ) {
 
 			/* read to next newline so we don't break up
 			   lines seeking around */
-			fgets( line, 1000, in );
+			if( fgets( line, sizeof line, in ) == NULL)
+				break;
 			new_pos = ftell( in );
 
 			/* Make a note of moving */
